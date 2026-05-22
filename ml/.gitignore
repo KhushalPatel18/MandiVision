@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .env
-.\data\raw
+.\ml\data\raw
