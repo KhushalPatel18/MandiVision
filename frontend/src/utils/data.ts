@@ -1,4 +1,4 @@
-import type { FeatureItem, StatItem, StepItem, SupportedState, CommodityData } from '../types';
+import type { FeatureItem, StatItem, StepItem, SupportedState, CommodityData, StateLocationOption, SupportedStateName } from '../types';
 
 export const FEATURES_DATA: FeatureItem[] = [
   {
@@ -166,3 +166,53 @@ export const COMMODITIES_DATA: CommodityData[] = [
     change: 18.62,
   },
 ];
+
+export const STATE_LOCATION_DATA: StateLocationOption[] = [
+  {
+    state: 'Gujarat',
+    districts: [
+      {
+        name: 'Rajkot',
+        markets: ['Rajkot APMC', 'Gondal APMC', 'Jetpur Market Yard'],
+      },
+      {
+        name: 'Banaskantha',
+        markets: ['Deesa APMC', 'Palanpur APMC', 'Tharad Market Yard'],
+      },
+      {
+        name: 'Mehsana',
+        markets: ['Unjha APMC', 'Visnagar Market Yard', 'Mehsana APMC'],
+      },
+      {
+        name: 'Sabarkantha',
+        markets: ['Himmatnagar APMC', 'Idar Market Yard', 'Talod APMC'],
+      },
+    ],
+  },
+  {
+    state: 'Uttar Pradesh',
+    districts: [
+      {
+        name: 'Auraiya',
+        markets: ['Auraiya Mandi', 'Dibiyapur Market', 'Achhalda Yard'],
+      },
+      {
+        name: 'Hapur',
+        markets: ['Hapur Mandi', 'Garhmukteshwar Yard', 'Pilkhua Market'],
+      },
+      {
+        name: 'Muzaffarnagar',
+        markets: ['Muzaffarnagar Mandi', 'Khatauli Yard', 'Shamli Market'],
+      },
+      {
+        name: 'Kanpur Dehat',
+        markets: ['Rura Mandi', 'Akbarpur Market', 'Pukhrayan Yard'],
+      },
+    ],
+  },
+];
+
+export const VARIETY_OPTIONS_BY_STATE: Record<SupportedStateName, string[]> = {
+  Gujarat: ['Local', 'Bold', 'Desi', 'Hybrid', 'FAQ'],
+  'Uttar Pradesh': ['Common', 'Malanad', 'Desi', 'Hybrid', 'FAQ'],
+};

@@ -1,0 +1,22 @@
+# Local configuration & environment variables
+.env
+
+# Database local cache
+*.db
+mandivision.db
+
+# Python compiled cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary testing & scratch scripts
+scratch_*.py
+scratch_test.py
+
+# Editor & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

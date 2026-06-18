@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PrimaryButton from '../ui/PrimaryButton';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Button from '../ui/Button';
 import logo from '../../assets/logo.png';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,24 +25,41 @@ const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Features', href: '#features' },
-    { name: 'Market Trends', href: '#market-trends' },
-    { name: 'About', href: '#how-it-works' },
+    { name: 'Home', href: '/' },
+    { name: 'Features', href: '/#features' },
+    { name: 'Market Trends', href: '/#market-trends' },
+    { name: 'How It Works', href: '/#how-it-works' },
   ];
 
   const handleLinkClick = (href: string) => {
     setIsMobileMenuOpen(false);
-    const element = document.querySelector(href === '#' ? 'body' : href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    
+    if (href === '/') {
+      if (location.pathname === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
+      return;
+    }
+
+    if (href.startsWith('/#')) {
+      const anchor = href.substring(2);
+      if (location.pathname === '/') {
+        const element = document.getElementById(anchor);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        navigate(href);
+      }
     }
   };
 
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || location.pathname !== '/'
             ? 'bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)] py-3'
             : 'bg-transparent py-5'
           }`}
@@ -47,11 +67,13 @@ const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a
-              href="#"
+            <Link
+              to="/"
               onClick={(e) => {
-                e.preventDefault();
-                handleLinkClick('#');
+                if (location.pathname === '/') {
+                  e.preventDefault();
+                  handleLinkClick('/');
+                }
               }}
               className="flex items-center gap-2.5 group cursor-pointer"
             >
@@ -61,14 +83,14 @@ const Navbar: React.FC = () => {
                 className="h-32 w-32 -my-8 -mx-6 object-contain group-hover:scale-105 transition-transform duration-200"
               />
               <div className="flex flex-col">
-                <span className="text-xl font-extrabold tracking-tight text-text-dark group-hover:text-primary-green transition-colors duration-200">
-                  Mandi<span className="text-primary-green">Vision</span>
+                <span className="text-xl font-extrabold tracking-tight text-text-dark group-hover:text-primary transition-colors duration-200">
+                  Mandi<span className="text-primary">Vision</span>
                 </span>
-                <span className="text-[10px] font-semibold text-accent-brown tracking-widest uppercase -mt-1">
+                <span className="text-[10px] font-semibold text-accent tracking-widest uppercase -mt-1">
                   AI Agri-Tech
                 </span>
               </div>
-            </a>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
@@ -80,7 +102,7 @@ const Navbar: React.FC = () => {
                     e.preventDefault();
                     handleLinkClick(link.href);
                   }}
-                  className="text-sm font-medium text-gray-600 hover:text-primary-green transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary-green after:transition-all after:duration-200 hover:after:w-full"
+                  className="text-sm font-medium text-gray-600 hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
                 >
                   {link.name}
                 </a>
@@ -89,14 +111,15 @@ const Navbar: React.FC = () => {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-4">
-              <PrimaryButton
-                variant="primary"
-                size="sm"
-                onClick={() => handleLinkClick('#cta')}
-                icon={<ChevronRight className="h-4 w-4" />}
-              >
-                Get Started
-              </PrimaryButton>
+              <Link to="/dashboard">
+                <Button
+                  variant="primary"
+                  size="md"
+                  icon={<ChevronRight className="h-4 w-4" />}
+                >
+                  Get Started
+                </Button>
+              </Link>
             </div>
 
             {/* Mobile menu button */}
@@ -136,21 +159,22 @@ const Navbar: React.FC = () => {
                       e.preventDefault();
                       handleLinkClick(link.href);
                     }}
-                    className="block px-3 py-2 rounded-xl text-base font-semibold text-gray-600 hover:text-primary-green hover:bg-green-50/50 transition-all duration-200"
+                    className="block px-3 py-2 rounded-xl text-base font-semibold text-gray-600 hover:text-primary hover:bg-green-50/50 transition-all duration-200"
                   >
                     {link.name}
                   </a>
                 ))}
                 <div className="pt-2 px-3">
-                  <PrimaryButton
-                    variant="primary"
-                    size="md"
-                    className="w-full"
-                    onClick={() => handleLinkClick('#cta')}
-                    icon={<ChevronRight className="h-4 w-4" />}
-                  >
-                    Get Started
-                  </PrimaryButton>
+                  <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button
+                      variant="primary"
+                      size="md"
+                      className="w-full"
+                      icon={<ChevronRight className="h-4 w-4" />}
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
