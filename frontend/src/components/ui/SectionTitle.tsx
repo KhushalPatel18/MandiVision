@@ -23,7 +23,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
       className={`max-w-3xl mb-12 md:mb-16 ${centered ? 'text-center mx-auto' : 'text-left'}`}
     >
       {badge && (
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-primary-green bg-green-50 border border-green-200/50 mb-3 uppercase">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-primary bg-green-50 border border-primary/20 mb-3 uppercase">
           {badge}
         </span>
       )}

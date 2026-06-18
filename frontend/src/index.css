@@ -2,12 +2,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-green: #2E7D32;
-  --color-primary-green-hover: #1b5e20;
-  --color-secondary-yellow: #FBC02D;
-  --color-accent-brown: #8D6E63;
-  --color-background-off-white: #FAF9F6;
-  --color-text-dark: #1F2937;
+  --color-primary: #16A34A;
+  --color-secondary: #22C55E;
+  --color-accent: #84CC16;
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text-dark: #0F172A;
+  --color-muted: #64748B;
+
+  /* Legacy mappings to prevent breaking existing classes */
+  --color-primary-green: #16A34A;
+  --color-primary-green-hover: #15803d;
+  --color-secondary-yellow: #84CC16;
+  --color-accent-brown: #64748B;
+  --color-background-off-white: #F8FAFC;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-inter: 'Inter', system-ui, -apple-system, sans-serif;

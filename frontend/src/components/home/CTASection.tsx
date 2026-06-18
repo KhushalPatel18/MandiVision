@@ -1,16 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sprout, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
-import PrimaryButton from '../ui/PrimaryButton';
+import { Link } from 'react-router-dom';
+import Button from '../ui/Button';
 
 const CTASection: React.FC = () => {
-  const handleScrollTo = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <section id="cta" className="py-20 md:py-24 bg-[#122214] text-white relative overflow-hidden">
       {/* Decorative Top/Bottom Borders */}
@@ -67,15 +61,16 @@ const CTASection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="w-full sm:w-auto"
         >
-          <PrimaryButton
-            variant="secondary"
-            size="lg"
-            className="w-full sm:w-auto shadow-xl shadow-yellow-950/20 text-gray-900 font-extrabold"
-            onClick={() => handleScrollTo('market-trends')}
-            icon={<ArrowRight className="h-5 w-5 text-gray-900" />}
-          >
-            Start Predicting Now
-          </PrimaryButton>
+          <Link to="/dashboard" className="w-full sm:w-auto">
+            <Button
+              variant="accent"
+              size="lg"
+              className="w-full sm:w-auto shadow-xl shadow-yellow-950/20 text-white font-extrabold cursor-pointer"
+              icon={<ArrowRight className="h-5 w-5" />}
+            >
+              Start Predicting Now
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Small trust factors */}
