@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Twitter, Linkedin, Github, MessageSquare, Send, Check } from 'lucide-react';
-import PrimaryButton from '../ui/PrimaryButton';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Button from '../ui/Button';
 import logo from '../../assets/logo.png';
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,10 +20,10 @@ const Footer: React.FC = () => {
   };
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Features', href: '#features' },
-    { name: 'Market Trends', href: '#market-trends' },
-    { name: 'How It Works', href: '#how-it-works' },
+    { name: 'Home', href: '/' },
+    { name: 'Features', href: '/#features' },
+    { name: 'Market Trends', href: '/#market-trends' },
+    { name: 'How It Works', href: '/#how-it-works' },
   ];
 
   const resourcesLinks = [
@@ -31,10 +34,24 @@ const Footer: React.FC = () => {
   ];
 
   const handleLinkClick = (href: string) => {
-    if (href.startsWith('#')) {
-      const element = document.querySelector(href === '#' ? 'body' : href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    if (href === '/') {
+      if (location.pathname === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
+      return;
+    }
+
+    if (href.startsWith('/#')) {
+      const anchor = href.substring(2);
+      if (location.pathname === '/') {
+        const element = document.getElementById(anchor);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        navigate(href);
       }
     }
   };
@@ -45,11 +62,13 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
           <div className="flex flex-col gap-4">
-            <a
-              href="#"
+            <Link
+              to="/"
               onClick={(e) => {
-                e.preventDefault();
-                handleLinkClick('#');
+                if (location.pathname === '/') {
+                  e.preventDefault();
+                  handleLinkClick('/');
+                }
               }}
               className="flex items-center gap-2.5 group cursor-pointer w-fit"
             >
@@ -60,13 +79,13 @@ const Footer: React.FC = () => {
               />
               <div className="flex flex-col">
                 <span className="text-xl font-extrabold tracking-tight text-white">
-                  Mandi<span className="text-primary-green">Vision</span>
+                  Mandi<span className="text-primary">Vision</span>
                 </span>
-                <span className="text-[10px] font-semibold text-secondary-yellow tracking-widest uppercase -mt-1">
+                <span className="text-[10px] font-semibold text-accent tracking-widest uppercase -mt-1">
                   AI Agri-Tech
                 </span>
               </div>
-            </a>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed mt-2">
               Empowering farmers, traders, and agri-consultants with hyper-local, real-time APMC price predictions powered by advanced machine learning models.
             </p>
@@ -74,28 +93,28 @@ const Footer: React.FC = () => {
             <div className="flex items-center gap-3 mt-4">
               <a
                 href="#"
-                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary-green hover:text-white transition-colors duration-200"
+                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-205"
                 aria-label="Twitter"
               >
                 <Twitter className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary-green hover:text-white transition-colors duration-200"
+                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-205"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary-green hover:text-white transition-colors duration-200"
+                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-205"
                 aria-label="GitHub"
               >
                 <Github className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary-green hover:text-white transition-colors duration-200"
+                className="h-9 w-9 rounded-xl bg-green-950/80 border border-green-900 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-205"
                 aria-label="Forum"
               >
                 <MessageSquare className="h-4 w-4" />
@@ -105,7 +124,7 @@ const Footer: React.FC = () => {
 
           {/* Quick Links Column */}
           <div>
-            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-sm border-b border-green-900/50 pb-2">
+            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-xs border-b border-green-900/50 pb-2">
               Platform
             </h3>
             <ul className="space-y-3">
@@ -117,7 +136,7 @@ const Footer: React.FC = () => {
                       e.preventDefault();
                       handleLinkClick(link.href);
                     }}
-                    className="text-gray-400 hover:text-primary-green transition-colors duration-200 text-sm"
+                    className="text-gray-400 hover:text-primary transition-colors duration-200 text-sm cursor-pointer"
                   >
                     {link.name}
                   </a>
@@ -128,7 +147,7 @@ const Footer: React.FC = () => {
 
           {/* Developer Resources Column */}
           <div>
-            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-sm border-b border-green-900/50 pb-2">
+            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-xs border-b border-green-900/50 pb-2">
               Developer
             </h3>
             <ul className="space-y-3">
@@ -136,7 +155,7 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-primary-green transition-colors duration-200 text-sm"
+                    className="text-gray-400 hover:text-primary transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </a>
@@ -147,32 +166,30 @@ const Footer: React.FC = () => {
 
           {/* Newsletter Column */}
           <div>
-            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-sm border-b border-green-900/50 pb-2">
+            <h3 className="text-white font-bold text-base mb-6 tracking-wide uppercase text-xs border-b border-green-900/50 pb-2">
               Newsletter
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               Subscribe to receive weekly crop forecast highlights and agricultural trading insights.
             </p>
             <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-              <div className="relative">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-green-950/60 border border-green-900 text-white placeholder-gray-500 focus:outline-none focus:border-primary-green text-sm transition-colors"
-                />
-              </div>
-              <PrimaryButton
+              <input
+                type="email"
+                required
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl bg-green-950/60 border border-green-900 text-white placeholder-gray-500 focus:outline-none focus:border-primary text-sm transition-colors"
+              />
+              <Button
                 type="submit"
                 variant="primary"
                 size="sm"
-                className="w-full"
+                className="w-full mt-1"
                 icon={subscribed ? <Check className="h-4 w-4 text-white" /> : <Send className="h-4 w-4" />}
               >
                 {subscribed ? 'Subscribed!' : 'Subscribe'}
-              </PrimaryButton>
+              </Button>
             </form>
           </div>
         </div>
@@ -181,9 +198,9 @@ const Footer: React.FC = () => {
         <div className="border-t border-green-900/40 pt-8 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <p>© {new Date().getFullYear()} MandiVision AI. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-primary-green transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-primary-green transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-primary-green transition-colors">Sitemap</a>
+            <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-primary transition-colors">Sitemap</a>
           </div>
         </div>
       </div>

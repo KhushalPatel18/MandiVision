@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, TrendingUp, ShieldCheck, Zap, RefreshCw, BarChart3, ChevronRight } from 'lucide-react';
-import PrimaryButton from '../ui/PrimaryButton';
+import { TrendingUp, ShieldCheck, Zap, RefreshCw, BarChart3, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Button from '../ui/Button';
 
 const HeroSection: React.FC = () => {
   const [selectedCrop, setSelectedCrop] = useState<'Cotton' | 'Onion' | 'Wheat'>('Cotton');
@@ -59,9 +60,9 @@ const HeroSection: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 border border-green-200/50 text-primary-green mb-6 shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 border border-green-200/50 text-primary mb-6 shadow-sm"
             >
-              <Zap className="h-3 w-3 fill-current" />
+              <Zap className="h-3 w-3 fill-current animate-pulse text-amber-500" />
               <span>Next-Gen Machine Learning for Agriculture</span>
             </motion.div>
 
@@ -70,10 +71,10 @@ const HeroSection: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-dark leading-tight tracking-tight mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-dark leading-tight tracking-tight mb-6 animate-fade-in"
             >
               Predict Crop Prices <br />
-              <span className="bg-gradient-to-r from-primary-green to-emerald-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">
                 Smarter with AI
               </span>
             </motion.h1>
@@ -95,25 +96,26 @@ const HeroSection: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-wrap items-center gap-4 w-full sm:w-auto"
             >
-              <PrimaryButton
-                variant="primary"
-                size="lg"
-                onClick={() => handleScrollTo('market-trends')}
-                className="w-full sm:w-auto shadow-md"
-                icon={<ChevronRight className="h-5 w-5" />}
-              >
-                Predict Prices
-              </PrimaryButton>
-              <PrimaryButton
+              <Link to="/dashboard" className="w-full sm:w-auto">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full shadow-md cursor-pointer"
+                  icon={<ChevronRight className="h-5 w-5" />}
+                >
+                  Get Started
+                </Button>
+              </Link>
+              <Button
                 variant="outline"
                 size="lg"
-                onClick={() => handleScrollTo('features')}
-                className="w-full sm:w-auto"
+                onClick={() => handleScrollTo('market-trends')}
+                className="w-full sm:w-auto cursor-pointer"
                 icon={<BarChart3 className="h-4 w-4" />}
                 iconPosition="left"
               >
-                Explore Trends
-              </PrimaryButton>
+                View Forecast Demo
+              </Button>
             </motion.div>
 
             {/* Trust Badges */}

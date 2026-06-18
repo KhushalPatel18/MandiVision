@@ -1,35 +1,80 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, ArrowUpRight, ArrowDownRight, Minus, TrendingUp, Info, HelpCircle, CheckCircle } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MapPin, ArrowUpRight, ArrowDownRight, Minus, TrendingUp, Info, CheckCircle } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
-import PrimaryButton from '../ui/PrimaryButton';
-import { COMMODITIES_DATA } from '../../utils/data';
+import Button from '../ui/Button';
+import { Link } from 'react-router-dom';
+import { COMMODITIES_DATA, STATE_LOCATION_DATA } from '../../utils/data';
+import type { SupportedStateName } from '../../types';
 
 const MarketTrends: React.FC = () => {
-  const [selectedState, setSelectedState] = useState<'Gujarat' | 'Uttar Pradesh'>('Gujarat');
+  const [selectedState, setSelectedState] = useState<SupportedStateName>('Gujarat');
   const [selectedCrop, setSelectedCrop] = useState<string>('Cotton (Kapas)');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [selectedMarket, setSelectedMarket] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
+  const [selectedVariety, setSelectedVariety] = useState<string>('Local');
+  
+
+  const getCommoditiesByState = (state: 'Gujarat' | 'Uttar Pradesh') => {
+    if (state === 'Gujarat') {
+      return COMMODITIES_DATA.filter(c => ['Cotton (Kapas)', 'Groundnut', 'Wheat (Gehun)'].includes(c.name));
+    }
+
+    return COMMODITIES_DATA.filter(c => ['Wheat (Gehun)', 'Potato (Aloo)', 'Onion (Pyaz)', 'Soybean'].includes(c.name));
+  };
+
+  const handleStateSelect = (state: SupportedStateName) => {
+    if (state === selectedState) {
+      return;
+    }
+
+    const stateCommodities = getCommoditiesByState(state);
+
+    setSelectedState(state);
+    
+    setSelectedDistrict('');
+    setSelectedMarket('');
+    setSelectedVariety('');
+
+    if (!stateCommodities.some((c) => c.name === selectedCrop) && stateCommodities.length > 0) {
+      setSelectedCrop(stateCommodities[0].name);
+    }
+  };
+
+  const handleDistrictSelect = (district: string) => {
+    setSelectedDistrict(district);
+    setSelectedMarket('');
+  };
 
   // Commodities mapped based on state
   const commoditiesByState = useMemo(() => {
-    if (selectedState === 'Gujarat') {
-      return COMMODITIES_DATA.filter(c => ['Cotton (Kapas)', 'Groundnut', 'Wheat (Gehun)'].includes(c.name));
-    } else {
-      return COMMODITIES_DATA.filter(c => ['Wheat (Gehun)', 'Potato (Aloo)', 'Onion (Pyaz)', 'Soybean'].includes(c.name));
-    }
+    return getCommoditiesByState(selectedState);
   }, [selectedState]);
 
-  // Adjust selected crop if it's not in the state's list
-  React.useEffect(() => {
-    if (commoditiesByState.length > 0) {
-      const exists = commoditiesByState.some(c => c.name === selectedCrop);
-      if (!exists) {
-        setSelectedCrop(commoditiesByState[0].name);
-      }
-    }
-  }, [selectedState, commoditiesByState, selectedCrop]);
+  const districtsByState = useMemo(() => {
+    const location = STATE_LOCATION_DATA.find((item) => item.state === selectedState);
+    return location ? location.districts : [];
+  }, [selectedState]);
 
-  // Active crop details
+  const marketsByDistrict = useMemo(() => {
+    const district = districtsByState.find((item) => item.name === selectedDistrict);
+    return district ? district.markets : [];
+  }, [districtsByState, selectedDistrict]);
+
+  const varietyOptions = useMemo(() => {
+    return selectedState === 'Uttar Pradesh'
+      ? ['Common', 'Desi', 'Hybrid', 'FAQ', 'Local', 'Malanad']
+      : ['Local', 'Bold', 'Desi', 'Hybrid', 'FAQ'];
+  }, [selectedState]);
+
+  useEffect(() => {
+    if (selectedState === 'Uttar Pradesh') {
+      setSelectedVariety((current) => (varietyOptions.includes(current) ? current : (varietyOptions[0] ?? '')));
+    } else {
+      setSelectedVariety('');
+    }
+  }, [selectedState, varietyOptions]);
+
   const activeCropDetails = useMemo(() => {
     // If exact name is found
     let details = COMMODITIES_DATA.find(c => c.name === selectedCrop);
@@ -94,7 +139,7 @@ const MarketTrends: React.FC = () => {
                     <button
                       key={state}
                       type="button"
-                      onClick={() => setSelectedState(state)}
+                      onClick={() => handleStateSelect(state)}
                       className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-bold transition-all duration-200 cursor-pointer ${
                         selectedState === state
                           ? 'bg-primary-green text-white border-primary-green shadow-sm'
@@ -109,49 +154,116 @@ const MarketTrends: React.FC = () => {
               </div>
 
               {/* Step 2: Select Crop */}
-              <div>
+              <div className="mb-6">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">
                   Step 2: Choose Monitored Commodity
                 </label>
                 
-                {/* Search field */}
-                <div className="relative mb-4">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                    <Search className="h-4 w-4" />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Search commodities..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 placeholder-gray-400 text-sm focus:outline-none focus:border-primary-green transition-all"
-                  />
-                </div>
-
-                {/* Grid List of crops */}
-                <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-1">
-                  {commoditiesByState
-                    .filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                    .map((commodity) => (
-                      <button
-                        key={commodity.name}
-                        type="button"
-                        onClick={() => setSelectedCrop(commodity.name)}
-                        className={`flex items-center justify-between py-3 px-4 rounded-xl border text-left text-sm font-bold transition-all duration-200 cursor-pointer ${
-                          selectedCrop === commodity.name
-                            ? 'bg-green-50 text-primary-green border-primary-green/30'
-                            : 'bg-white text-gray-600 border-gray-150 hover:bg-gray-50/50'
-                        }`}
-                      >
-                        <span>{commodity.name}</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-gray-400 uppercase tracking-wider">{commodity.category}</span>
-                          <span className={`h-2 w-2 rounded-full ${
-                            commodity.trend === 'up' ? 'bg-green-500' : commodity.trend === 'down' ? 'bg-red-500' : 'bg-gray-400'
-                          }`} />
-                        </div>
-                      </button>
+                <div className="mb-3">
+                  <select
+                    value={selectedCrop}
+                    onChange={(e) => setSelectedCrop(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-primary-green"
+                  >
+                    {commoditiesByState.map((commodity) => (
+                      <option key={commodity.name} value={commodity.name}>
+                        {commodity.name} — {commodity.category}
+                      </option>
                     ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Step 3: Select District (Optional) */}
+              <div className="mb-6">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">
+                  Step 3: Select District (Optional)
+                </label>
+
+                <div className="mb-3">
+                  <select
+                    value={selectedDistrict}
+                    onChange={(e) => { handleDistrictSelect(e.target.value); }}
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-primary-green"
+                  >
+                    <option value="">Any District</option>
+                    {districtsByState.map((district) => (
+                      <option key={district.name} value={district.name}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Step 4: Select Market (Optional) */}
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">
+                  Step 4: Select Market (Optional)
+                </label>
+
+                {/* Toggleable market panel (slide-down) */}
+                <div className="mb-3">
+                  <select
+                    value={selectedMarket}
+                    onChange={(e) => { setSelectedMarket(e.target.value); }}
+                    disabled={selectedDistrict === ''}
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-primary-green disabled:bg-gray-50 disabled:text-gray-400"
+                  >
+                    <option value="">Any Market</option>
+                    {marketsByDistrict.map((market) => (
+                      <option key={market} value={market}>
+                        {market}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Step 5: Additional Inputs */}
+              <div className="mt-6 pt-6 border-t border-gray-100/80">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">
+                  Step 5: Additional Inputs
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-semibold text-gray-500 block mb-2">
+                      Price Date
+                    </label>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-primary-green transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-semibold text-gray-500 block mb-2">
+                      Variety
+                    </label>
+                    <select
+                      value={selectedVariety}
+                      onChange={(e) => setSelectedVariety(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-primary-green transition-all"
+                      disabled={selectedState !== 'Uttar Pradesh'}
+                    >
+                      {selectedState === 'Uttar Pradesh' ? (
+                        varietyOptions.map((variety) => (
+                          <option key={variety} value={variety}>
+                            {variety}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="">Variety is not required for Gujarat</option>
+                      )}
+                    </select>
+                  </div>
+
+                  <div className="sm:col-span-2 rounded-2xl border border-green-100 bg-green-50/50 p-4 text-sm text-green-800 leading-relaxed">
+                    Date, district, market, and variety are captured here.
+                  </div>
                 </div>
               </div>
             </div>
@@ -177,6 +289,11 @@ const MarketTrends: React.FC = () => {
                   <span className="text-[10px] font-bold tracking-widest text-secondary-yellow uppercase">
                     Forecasting Console
                   </span>
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    {selectedState}
+                    {selectedDistrict ? ` • ${selectedDistrict}` : ' • Any District'}
+                    {selectedMarket ? ` • ${selectedMarket}` : ' • Any Market'}
+                  </p>
                   <h3 className="text-2xl font-extrabold text-white mt-1">
                     {activeCropDetails.name} <span className="text-xs font-medium text-gray-400">({activeCropDetails.category})</span>
                   </h3>
@@ -246,17 +363,15 @@ const MarketTrends: React.FC = () => {
               <span className="text-[11px] text-gray-500 leading-normal max-w-sm">
                 *Predictions use seasonal decomposition and LSTM neural networks built on 7 years of market volume indices.
               </span>
-              <PrimaryButton
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  const el = document.getElementById('cta');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="font-bold text-gray-900 shadow-lg shadow-yellow-950/20 py-2.5 px-5 shrink-0 cursor-pointer"
-              >
-                Start Smart Forecasting
-              </PrimaryButton>
+              <Link to="/dashboard">
+                <Button
+                  variant="accent"
+                  size="sm"
+                  className="font-bold text-white shadow-lg shadow-yellow-950/20 py-2.5 px-5 shrink-0 cursor-pointer"
+                >
+                  Start Smart Forecasting
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
