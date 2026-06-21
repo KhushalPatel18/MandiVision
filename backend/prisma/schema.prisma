@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("farmer")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model State {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  markets Market[]
+
+  @@map("states")
+}
+
+model Commodity {
+  id            String         @id @default(uuid())
+  name          String
+  category      String
+  priceHistory  PriceHistory[]
+  predictions   Prediction[]
+
+  @@map("commodities")
+}
+
+model Market {
+  id           String         @id @default(uuid())
+  name         String
+  district     String
+  stateId      String         @map("state_id")
+  state        State          @relation(fields: [stateId], references: [id])
+  priceHistory PriceHistory[]
+
+  @@map("markets")
+}
+
+model PriceHistory {
+  id          String    @id @default(uuid())
+  date        DateTime
+  minPrice    Float     @map("min_price")
+  maxPrice    Float     @map("max_price")
+  modalPrice  Float     @map("modal_price")
+  commodityId String    @map("commodity_id")
+  commodity   Commodity @relation(fields: [commodityId], references: [id])
+  marketId    String    @map("market_id")
+  market      Market    @relation(fields: [marketId], references: [id])
+
+  @@map("price_history")
+}
+
+model Prediction {
+  id             String    @id @default(uuid())
+  predictedPrice Float     @map("predicted_price")
+  confidence     Float
+  commodityId    String    @map("commodity_id")
+  commodity      Commodity @relation(fields: [commodityId], references: [id])
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@map("predictions")
+}
