@@ -65,6 +65,11 @@ const Navbar: React.FC = () => {
       return;
     }
 
+    if (location.pathname === href) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     // Direct SPA client-side route navigation
     navigate(href);
   };
