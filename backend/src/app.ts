@@ -14,8 +14,11 @@ const app = express();
 // Security headers
 app.use(helmet());
 
-// CORS - parse multiple origins from dynamic config
-const allowedOrigins = env.CORS_ORIGIN.split(',').map(o => o.trim());
+// CORS - parse multiple origins from dynamic config (with trailing slash cleanup)
+const allowedOrigins = [
+  ...env.CORS_ORIGIN.split(',').map(o => o.trim().replace(/\/$/, '')),
+  'https://mandi-vision.vercel.app' // Direct production fallback
+];
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
