@@ -1,0 +1,9 @@
+=== Model Inspection Output ===
+
+UP Model Type: <class 'xgboost.sklearn.XGBRegressor'>
+UP Features: [np.str_('District'), np.str_('Market'), np.str_('Commodity'), np.str_('Variety'), np.str_('Year'), np.str_('Month'), np.str_('Day'), np.str_('DayOfWeek'), np.str_('Lag_1'), np.str_('Lag_3'), np.str_('Lag_7'), np.str_('Rolling_Mean_3'), np.str_('Rolling_Mean_7')]
+UP Encoders type: <class 'dict'>
+UP Encoders keys: ['District', 'Market', 'Commodity', 'Variety']
+Gujarat Model Type: <class 'catboost.core.CatBoostRegressor'>
+Gujarat Features: ['Commodity', 'District Name', 'Market Name', 'Lag_1', 'Lag_3', 'Lag_7', 'Rolling_Mean_7', 'Rolling_STD_7', 'Month_sin', 'Month_cos']
+Gujarat Model Params: {'eval_metric': 'RMSE', 'od_wait': 50, 'verbose': 0, 'iterations': 1000, 'loss_function': 'MAE', 'depth': 8, 'random_seed': 42, 'learning_rate': 0.05}

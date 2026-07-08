@@ -34,12 +34,6 @@ const HeroSection: React.FC = () => {
     },
   };
 
-  const handleScrollTo = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-green-50/50 via-white to-background-off-white">
@@ -96,7 +90,7 @@ const HeroSection: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-wrap items-center gap-4 w-full sm:w-auto"
             >
-              <Link to="/dashboard" className="w-full sm:w-auto">
+              <Link to="/authform?mode=login" className="w-full sm:w-auto">
                 <Button
                   variant="primary"
                   size="lg"
@@ -106,16 +100,17 @@ const HeroSection: React.FC = () => {
                   Get Started
                 </Button>
               </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => handleScrollTo('market-trends')}
-                className="w-full sm:w-auto cursor-pointer"
-                icon={<BarChart3 className="h-4 w-4" />}
-                iconPosition="left"
-              >
-                View Forecast Demo
-              </Button>
+              <Link to="/dashboard" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full cursor-pointer"
+                  icon={<BarChart3 className="h-4 w-4" />}
+                  iconPosition="left"
+                >
+                  Explore Dashboard
+                </Button>
+              </Link>
             </motion.div>
 
             {/* Trust Badges */}

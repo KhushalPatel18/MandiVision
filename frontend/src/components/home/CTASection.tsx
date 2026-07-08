@@ -61,7 +61,7 @@ const CTASection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="w-full sm:w-auto"
         >
-          <Link to="/dashboard" className="w-full sm:w-auto">
+          <Link to="/authform?mode=login" className="w-full sm:w-auto">
             <Button
               variant="accent"
               size="lg"

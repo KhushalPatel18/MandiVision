@@ -4,7 +4,6 @@ import Footer from '../components/layout/Footer';
 import HeroSection from '../components/home/HeroSection';
 import StatsSection from '../components/home/StatsSection';
 import FeaturesSection from '../components/home/FeaturesSection';
-import MarketTrends from '../components/home/MarketTrends';
 import HowItWorks from '../components/home/HowItWorks';
 import SupportedStates from '../components/home/SupportedStates';
 import CTASection from '../components/home/CTASection';
@@ -25,9 +24,6 @@ const Home: React.FC = () => {
 
         {/* Core Value Features */}
         <FeaturesSection />
-
-        {/* Live Interactive Pricing Simulation Tool */}
-        <MarketTrends />
 
         {/* Step-by-Step farmer guide */}
         <HowItWorks />
