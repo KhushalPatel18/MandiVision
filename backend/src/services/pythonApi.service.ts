@@ -7,7 +7,7 @@ class PythonApiService {
 
   constructor() {
     this.client = axios.create({
-      baseURL: env.PYTHON_API_URL,
+      baseURL: env.ML_SERVICE_URL,
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json',
