@@ -56,28 +56,5 @@
 
 ---
 
-## 🐳 Containerization and Deployment
-
-Both the frontend and backend are fully containerized using **Docker**, making them deployable to any cloud platform (such as Render, Fly.io, AWS ECS, Railway, or Google Cloud Run).
-
-### Environment Variables for Deployment
-
-#### Backend Variables:
-*   `DATABASE_URL`: PostgreSQL connection string.
-*   `JWT_SECRET`: Secure string used to sign user auth sessions.
-*   `DATA_GOV_API_KEY`: API key for Agmarknet/Data.gov.in.
-*   `CORS_ORIGIN`: Comma-separated list of allowed frontend domains (e.g., `https://mandivision.com`).
-*   `PORT`: Port to bind (handled dynamically by the host, defaulting to `5000`).
-*   `ML_SERVICE_URL`: Base URL of the running Python ML prediction service.
-
-#### Frontend Variables:
-*   `VITE_API_URL`: URL of the deployed backend server API prefix.
-
-### Deployment steps:
-1. **GitHub Push**: The `.gitignore` files are pre-configured to ensure no sensitive `.env` files or credentials are ever pushed to the repository.
-2. **Build Containers**:
-   * Build backend: `docker build -t mandivision-backend ./backend`
-   * Build frontend: `docker build -t mandivision-frontend ./frontend`
-3. **Database Migration**: Ensure `npx prisma db push` or `prisma migrate deploy` is triggered during the backend build pipeline step before boot.
-4. **Nginx Integration**: The frontend container uses Nginx with a customized routing index configured to prevent 404s when direct routing React Router sub-pages.
-
+## 🤝 Contributing
+Contributions are welcome! Feel free to open an issue or submit a pull request.
