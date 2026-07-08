@@ -5,11 +5,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   success?: boolean;
   icon?: React.ReactNode;
+  suffix?: React.ReactNode;
   helperText?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, success, icon, helperText, className = '', disabled, ...props }, ref) => {
+  ({ label, error, success, icon, suffix, helperText, className = '', disabled, ...props }, ref) => {
     const isError = !!error;
 
     return (
@@ -31,7 +32,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={`
               w-full py-3.5 rounded-2xl bg-white border text-sm font-medium transition-all duration-200
               placeholder-gray-400 text-text-dark focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-gray-50/70 disabled:text-gray-400 disabled:cursor-not-allowed
-              ${icon ? 'pl-11 pr-4' : 'px-4'}
+              ${icon ? 'pl-11' : 'pl-4'}
+              ${suffix ? 'pr-11' : 'pr-4'}
               ${isError 
                 ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-200/50' 
                 : success 
@@ -42,6 +44,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             `}
             {...props}
           />
+          {suffix && (
+            <div className="absolute right-4 flex items-center justify-center">
+              {suffix}
+            </div>
+          )}
         </div>
         {error && (
           <span className="text-[11px] font-bold text-rose-500 mt-1.5 leading-none">
