@@ -62,7 +62,11 @@ const Navbar: React.FC = () => {
       } else {
         navigate(href);
       }
+      return;
     }
+
+    // Direct SPA client-side route navigation
+    navigate(href);
   };
 
   const handleLogout = () => {
@@ -115,9 +119,7 @@ const Navbar: React.FC = () => {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => {
-                    if (link.href.startsWith('/#')) {
-                      e.preventDefault();
-                    }
+                    e.preventDefault();
                     handleLinkClick(link.href);
                   }}
                   className="text-sm font-medium text-gray-600 hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
@@ -230,9 +232,7 @@ const Navbar: React.FC = () => {
                     key={link.name}
                     href={link.href}
                     onClick={(e) => {
-                      if (link.href.startsWith('/#')) {
-                        e.preventDefault();
-                      }
+                      e.preventDefault();
                       handleLinkClick(link.href);
                     }}
                     className="block px-3 py-2 rounded-xl text-base font-semibold text-gray-600 hover:text-primary hover:bg-green-50/50 transition-all duration-200"
