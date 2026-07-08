@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Lightbulb, ArrowUpRight, ShieldAlert, Sparkles, TrendingUp, HelpCircle } from 'lucide-react';
-import Card from '../ui/Card';
 
 interface InsightCard {
   title: string;

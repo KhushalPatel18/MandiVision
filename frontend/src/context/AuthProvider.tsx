@@ -7,7 +7,7 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { initializeAuth, login, logout, token } = useAuthStore();
+  const { initializeAuth, login } = useAuthStore();
 
   useEffect(() => {
     const bootstrap = async () => {

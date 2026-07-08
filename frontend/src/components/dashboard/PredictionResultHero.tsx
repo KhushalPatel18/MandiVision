@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowDownRight, Minus, AlertCircle, Calendar } from 'lucide-react';
-import Badge from '../ui/Badge';
 
 export interface PredictionHeroData {
   commodity: string;

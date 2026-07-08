@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
     if (!marketOverview) return [];
 
     // 1. Map historical actual prices from Government API
-    const points = marketOverview.history.map(h => ({
+    const points: { date: string; price: number; type: 'actual' | 'predicted' }[] = marketOverview.history.map(h => ({
       date: new Date(h.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
       price: h.price,
       type: 'actual' as const,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, TrendingUp, BarChart2, Globe, Sparkles } from 'lucide-react';
+import { CheckCircle2, Globe, Sparkles } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
 interface AuthBannerProps {
